@@ -1,0 +1,34 @@
+# macOS
+.DS_Store
+**/.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode
+xcuserdata/
+DerivedData/
+*.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+
+# Swift Package Manager
+/.build
+/Packages
+.swiftpm/
+Package.resolved
+
+# CocoaPods (just in case)
+Pods/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Secrets
+.netrc
+.env
+*.p12
+*.mobileprovision
+*.cer
