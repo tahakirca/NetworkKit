@@ -199,21 +199,40 @@ RetryInterceptor(
 
 ## Logging
 
-`LoggingInterceptor` prints requests and responses while keeping secrets out of your logs:
+`LoggingInterceptor` has 4 log levels and only runs in DEBUG builds — production gets zero log output regardless of the level you set.
 
 ```swift
-LoggingInterceptor(
-    sensitiveHeaders: ["Authorization", "Cookie", "Set-Cookie"]
-)
+// Just URL + status code
+LoggingInterceptor(level: .minimal)
+
+// + request headers with sensitive ones redacted (default)
+LoggingInterceptor(level: .headers)
+
+// + pretty-printed response body
+LoggingInterceptor(level: .body)
+
+// Completely off
+LoggingInterceptor(level: .none)
 ```
 
-Output looks like this:
+Output at `.body` level:
 ```
 → GET https://api.example.com/users [Authorization: ████████, Content-Type: application/json]
 ← 200 https://api.example.com/users (1234 bytes)
+📦 Response:
+[
+  {
+    "id" : 1,
+    "name" : "Leanne Graham"
+  }
+]
 ```
 
-Header redaction is case-insensitive — `authorization`, `AUTHORIZATION`, `Authorization` all get masked.
+Header redaction is case-insensitive — `authorization`, `AUTHORIZATION`, `Authorization` all get masked. You can also add your own sensitive headers:
+
+```swift
+LoggingInterceptor(level: .headers, sensitiveHeaders: ["Authorization", "X-API-Key"])
+```
 
 ## Error handling
 
@@ -324,6 +343,18 @@ let client = HTTPClient(decoder: decoder)
                     │  retry()     │
                     └──────────────┘
 ```
+
+## Example App
+
+There's a full working iOS app in [`Examples/ExampleApp/`](Examples/ExampleApp/). Open `ExampleApp.xcodeproj` in Xcode, pick a simulator, hit Run.
+
+It uses [JSONPlaceholder](https://jsonplaceholder.typicode.com) as a fake API and shows:
+- Endpoint definitions
+- HTTPClient setup with interceptors (auth + logging + retry)
+- Fetching and displaying a user list
+- Creating a post (POST request with JSON body)
+- Error handling with NetworkError
+- TokenProvider and TokenStore implementation
 
 ## Requirements
 
