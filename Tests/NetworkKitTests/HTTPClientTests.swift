@@ -9,7 +9,7 @@ struct HTTPClientTests {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [MockURLProtocol.self]
         let session = URLSession(configuration: config)
-        return HTTPClient(session: session, interceptors: interceptors)
+        return HTTPClient(baseURL: URL(string: "http://localhost")!, session: session, interceptors: interceptors)
     }
 
     private func stubResponse(

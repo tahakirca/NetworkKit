@@ -9,8 +9,8 @@ import Foundation
 
 
 extension URLRequest {
-    init(_ endPoint: Endpoint, encoder: JSONEncoder) throws {
-        guard var components = URLComponents(url: endPoint.baseURL.appending(path: endPoint.path), resolvingAgainstBaseURL: false) else {
+    init(_ endPoint: Endpoint, baseURL: URL, encoder: JSONEncoder) throws {
+        guard var components = URLComponents(url: baseURL.appending(path: endPoint.path), resolvingAgainstBaseURL: false) else {
             throw NetworkError.invalidURL
         }
 

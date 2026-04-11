@@ -8,17 +8,20 @@
 import Foundation
 
 public final class HTTPClient: Sendable {
+    private let baseURL: URL
     private let session: URLSession
     private let interceptors: [any Interceptor]
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
 
     public init(
+        baseURL: URL,
         session: URLSession = .shared,
         interceptors: [any Interceptor] = [],
         decoder: JSONDecoder = JSONDecoder(),
         encoder: JSONEncoder = JSONEncoder(),
     ) {
+        self.baseURL = baseURL
         self.session = session
         self.interceptors = interceptors
         self.decoder = decoder
@@ -58,7 +61,8 @@ public final class HTTPClient: Sendable {
         endpoint: Endpoint,
         attempt: Int = 0
     ) async throws -> NetworkResponse {
-        var urlRequest = try URLRequest(endpoint, encoder: encoder)
+        let resolvedBaseURL = endpoint.baseURL ?? baseURL
+        var urlRequest = try URLRequest(endpoint, baseURL: resolvedBaseURL, encoder: encoder)
 
         for interceptor in interceptors {
             urlRequest = try await interceptor.adapt(urlRequest)

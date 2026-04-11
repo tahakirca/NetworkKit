@@ -9,7 +9,7 @@ import Foundation
                                                           
 public protocol Endpoint {
     var path: String { get }
-    var baseURL: URL { get }
+    var baseURL: URL? { get }
     var method: HTTPMethod { get }
     var headers: [String: String]? { get }
     var body: RequestBody? { get }
@@ -17,6 +17,7 @@ public protocol Endpoint {
 }
 
 public extension Endpoint {
+    var baseURL: URL? { nil }
     var headers: [String: String]? { nil }
     var queryItems: [URLQueryItem]? { nil }
     var body: RequestBody? { nil }

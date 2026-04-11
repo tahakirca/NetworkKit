@@ -10,8 +10,6 @@ enum TestEndpoint: Endpoint {
     case withData(Data)
     case invalidPath
 
-    var baseURL: URL { URL(string: "https://api.test.com")! }
-
     var path: String {
         switch self {
         case .simple, .withQuery, .withHeaders, .withJSON, .withForm, .withData:
