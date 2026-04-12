@@ -9,9 +9,14 @@ import Foundation
 
 public final class AuthInterceptor: Interceptor, Sendable {
     private let tokenManager: TokenManager
+    private let onUnauthorized: (@Sendable () async -> Void)?
 
-    public init(tokenManager: TokenManager) {
+    public init(
+        tokenManager: TokenManager,
+        onUnauthorized: (@Sendable () async -> Void)? = nil
+    ) {
         self.tokenManager = tokenManager
+        self.onUnauthorized = onUnauthorized
     }
 
     public func adapt(_ request: URLRequest) async throws -> URLRequest {
@@ -37,6 +42,7 @@ public final class AuthInterceptor: Interceptor, Sendable {
             _ = try await tokenManager.refreshToken()
             return .retry
         } catch {
+            await onUnauthorized?()
             return .doNotRetry
         }
     }
