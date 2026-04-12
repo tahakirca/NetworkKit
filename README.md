@@ -42,8 +42,6 @@ enum UserEndpoint: Endpoint {
     case create(name: String, email: String)
     case delete(id: Int)
 
-    var baseURL: URL { URL(string: "https://api.example.com")! }
-
     var path: String {
         switch self {
         case .list: "/users"
@@ -75,7 +73,7 @@ enum UserEndpoint: Endpoint {
 ### 2. Create a client
 
 ```swift
-let client = HTTPClient()
+let client = HTTPClient(baseURL: URL(string: "https://api.example.com")!)
 ```
 
 ### 3. Make requests
@@ -109,6 +107,7 @@ let tokenManager = TokenManager(
 )
 
 let client = HTTPClient(
+    baseURL: URL(string: "https://api.example.com")!,
     interceptors: [
         AuthInterceptor(tokenManager: tokenManager),
         LoggingInterceptor(),
@@ -162,7 +161,7 @@ Error:    → retry → retry → retry → throw or retry
 `AuthInterceptor` + `TokenManager` handle the whole auth flow. You just provide two things:
 
 ```swift
-struct MyAuthProvider: TokenProvider {
+struct MyAuthProvider: RefreshTokenProvider {
     func refreshToken() async throws -> String {
         // Hit your auth API, return the new access token
     }
@@ -314,6 +313,7 @@ response.headers.values(for: "Set-Cookie") // ["session=abc", "lang=en"]
 
 ```swift
 let client = HTTPClient(
+    baseURL: URL(string: "https://api.example.com")!,
     session: customURLSession,          // default: .shared
     interceptors: [auth, logging],      // default: none
     decoder: customDecoder,             // default: JSONDecoder()
@@ -325,7 +325,7 @@ let decoder = JSONDecoder()
 decoder.keyDecodingStrategy = .convertFromSnakeCase
 decoder.dateDecodingStrategy = .iso8601
 
-let client = HTTPClient(decoder: decoder)
+let client = HTTPClient(baseURL: URL(string: "https://api.example.com")!, decoder: decoder)
 ```
 
 ## Architecture
@@ -354,7 +354,7 @@ It uses [JSONPlaceholder](https://jsonplaceholder.typicode.com) as a fake API an
 - Fetching and displaying a user list
 - Creating a post (POST request with JSON body)
 - Error handling with NetworkError
-- TokenProvider and TokenStore implementation
+- RefreshTokenProvider and TokenStore implementation
 
 ## Requirements
 

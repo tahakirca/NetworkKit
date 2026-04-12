@@ -1,7 +1,7 @@
 import NetworkKit
 import Foundation
 
-actor MockTokenProvider: TokenProvider {
+actor MockRefreshTokenProvider: RefreshTokenProvider {
     var callCount = 0
     var shouldFail = false
 

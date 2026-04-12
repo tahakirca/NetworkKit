@@ -8,7 +8,7 @@ struct AuthInterceptorTests {
     private func makeInterceptor(token: String? = nil) async -> (AuthInterceptor, MockTokenStore) {
         let store = MockTokenStore()
         if let token { await store.save(token: token) }
-        let provider = MockTokenProvider()
+        let provider = MockRefreshTokenProvider()
         let manager = TokenManager(provider: provider, store: store)
         return (AuthInterceptor(tokenManager: manager), store)
     }

@@ -8,11 +8,11 @@
 import Foundation
 
 public actor TokenManager {
-    private let provider: any TokenProvider
+    private let provider: (any RefreshTokenProvider)?
     private let store: any TokenStore
     private var refreshTask: Task<String, any Error>?
 
-    public init(provider: any TokenProvider, store: any TokenStore) {
+    public init(provider: (any RefreshTokenProvider)? = nil, store: any TokenStore) {
         self.provider = provider
         self.store = store
     }
@@ -22,6 +22,10 @@ public actor TokenManager {
     }
 
     public func refreshToken() async throws -> String {
+        guard let provider else {
+            throw NetworkError.unauthorized
+        }
+
         if let existingTask = refreshTask {
             return try await existingTask.value
         }

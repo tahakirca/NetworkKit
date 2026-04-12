@@ -4,7 +4,7 @@ import NetworkKit
 // In a real app, this would call your auth API to get a new access token.
 // For this demo we just return a fake token.
 
-final class AppTokenProvider: TokenProvider, Sendable {
+final class AppRefreshTokenProvider: RefreshTokenProvider, Sendable {
     func refreshToken() async throws -> String {
         // Simulate network delay
         try await Task.sleep(for: .seconds(1))

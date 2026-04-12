@@ -22,6 +22,7 @@ final class NetworkManager {
         // 2. Logging — logs request WITH token (redacted)
         // 3. Retry — retries failed requests with backoff
         client = HTTPClient(
+            baseURL: URL(string: "https://jsonplaceholder.typicode.com")!,
             interceptors: [
                 AuthInterceptor(tokenManager: tokenManager),
                 LoggingInterceptor(level: .body),
