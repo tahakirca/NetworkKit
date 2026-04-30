@@ -13,7 +13,7 @@ final class NetworkManager {
 
     private init() {
         let tokenStore = AppTokenStore()
-        let tokenProvider = AppTokenProvider()
+        let tokenProvider = AppRefreshTokenProvider()
 
         tokenManager = TokenManager(provider: tokenProvider, store: tokenStore)
 
