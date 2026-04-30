@@ -24,26 +24,12 @@ public extension Endpoint {
 }
 
 public enum RequestBody: Sendable {
-    case jsonBody(AnyEncodable)
+    case jsonBody(any Encodable & Sendable)
     case data(Data, contentType: String)
     case formURLEncoded([String: String])
 
     public static func json<T: Encodable & Sendable>(_ value: T) -> RequestBody {
-        .jsonBody(AnyEncodable(value))
-    }
-}
-
-public struct AnyEncodable: Encodable, Sendable {
-    private let _encode: @Sendable (Encoder) throws -> Void
-
-    public init<T: Encodable & Sendable>(_ value: T) {
-        _encode = { encoder in
-            try value.encode(to: encoder)
-        }
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        try _encode(encoder)
+        .jsonBody(value)
     }
 }
 
